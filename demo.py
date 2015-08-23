@@ -15,6 +15,6 @@ result = soup.find_all(href=re.compile("/search/"))
 # result = found.find_all("a")
 for link in result:
 	print link.get('href')
-
+	print link.string
 
 

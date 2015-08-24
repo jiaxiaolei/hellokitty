@@ -8,3 +8,12 @@ class Rootport(models.Model):
 
     def __unicode__(self):
         return str(self.id)
+
+
+class Resources(models.Model):
+	title = models.TextField()
+	link = models.TextField()
+	status = models.BooleanField(default=False)
+	def __unicode__(self):
+		return str(self.id)
+		

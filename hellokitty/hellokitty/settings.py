@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from local_settings import *
 from datetime import timedelta
 import sys
 
@@ -61,12 +62,12 @@ WSGI_APPLICATION = 'hellokitty.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -90,7 +91,11 @@ STATIC_URL = '/static/'
 
 CELERYBEAT_SCHEDULE = {
     "robot": {
-        "task": "hellokitty.apps.torrentkitty.tasks",
-        "schedule": timedelta(minutes=60),
+        "task": "hellokitty.apps.torrentkitty.tasks.get_root_port",
+        "schedule": timedelta(days=1),
     },
+    "resources": {
+        "task": "hellokitty.apps.torrentkitty.tasks.get_resources_and_page",
+        "schedule": timedelta(days=1),
+    }
 }

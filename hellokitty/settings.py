@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'hellokitty.apps.torrentkitty',
     'djcelery',
+    'djsupervisor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -116,8 +117,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
-
+BROKER_URL = 'redis://localhost:6379/0'
 
 CELERYBEAT_SCHEDULE = {
     "robot": {

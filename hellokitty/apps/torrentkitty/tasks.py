@@ -81,7 +81,7 @@ def get_keyworld(keyworld_pages):
             result = soup.find_all(href=re.compile("/search/"))
             for link in result:
                 rlink = "http://www.torrentkitty.org{link}".format(link=link.get('href'))
-                if not Rootport.objects.filter(link=rlink) and rlink not in ck_list:
+                if not Rootport.objects.filter(link=rlink) and rlink not in ck_list and link.get('title'):
                     rp_list.append(Rootport(title=link.get('title'), link=rlink))
                     ck_list.append(rlink)
             Rootport.objects.bulk_create(rp_list)

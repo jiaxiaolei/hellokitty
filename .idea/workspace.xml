@@ -50,8 +50,8 @@
       <file leaf-file-name="tasks.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hellokitty/apps/torrentkitty/tasks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8076923">
-              <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.4945055">
+              <caret line="69" column="33" selection-start-line="69" selection-start-column="33" selection-end-line="69" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -306,7 +306,13 @@
       <option name="project" value="LOCAL" />
       <updated>1440494815473</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="update">
+      <created>1440495465733</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1440495465733</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -392,8 +398,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hellokitty/apps/torrentkitty/tasks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8076923">
-          <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.4945055">
+          <caret line="69" column="33" selection-start-line="69" selection-start-column="33" selection-end-line="69" selection-end-column="33" />
           <folding />
         </state>
       </provider>

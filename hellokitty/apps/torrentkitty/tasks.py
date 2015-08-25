@@ -21,7 +21,7 @@ def get_root_port():
         soup = BeautifulSoup(content)
         result = soup.find_all(href=re.compile("/search/"))
         for link in result:
-            if not Rootport.objects.filter(link="http://www.torrentkitty.org{link}".format(link=link.get('href'))):
+            if not Rootport.objects.filter(link="http://www.torrentkitty.org{link}".format(link=link.get('href'))) and not "http://www.torrentkitty.org{link}".format(link=link.get('href')) in rp_list:
                 rp_list.append(Rootport(
                     title=link.string, link="http://www.torrentkitty.org{link}".format(link=link.get('href'))))
         Rootport.objects.bulk_create(rp_list)

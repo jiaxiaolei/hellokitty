@@ -21,7 +21,9 @@ def get_root_port():
         soup = BeautifulSoup(content)
         result = soup.find_all(href=re.compile("/search/"))
         for link in result:
-            if not Rootport.objects.filter(link="http://www.torrentkitty.org{link}".format(link=link.get('href'))) and  "http://www.torrentkitty.org{link}".format(link=link.get('href')) not in rp_list:
+            if not Rootport.objects.filter(link="http://www.torrentkitty.org{link}".format(
+                    link=link.get('href'))) and "http://www.torrentkitty.org{link}".format(
+                    link=link.get('href')) not in rp_list:
                 rp_list.append(Rootport(
                     title=link.string, link="http://www.torrentkitty.org{link}".format(link=link.get('href'))))
         Rootport.objects.bulk_create(rp_list)
@@ -62,12 +64,13 @@ def get_resources_and_page():
             Resources.objects.bulk_create(resources_list)
             keyworld_pages = soup.find_all(href=re.compile("information"))
             get_keyworld(keyworld_pages)
+            Rootport.object.filter(link=rp.link).delete()
 
 
 def get_keyworld(keyworld_pages):
-    rp_list = []
-    ck_list = []
     for keyworld_page in keyworld_pages:
+        rp_list = []
+        ck_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
         request = urllib2.Request(url="http://www.torrentkitty.org%s" % keyworld_page.get("href"), headers=headers)

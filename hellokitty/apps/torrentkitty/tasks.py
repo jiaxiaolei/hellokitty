@@ -64,7 +64,7 @@ def get_resources_and_page():
             Resources.objects.bulk_create(resources_list)
             keyworld_pages = soup.find_all(href=re.compile("information"))
             get_keyworld(keyworld_pages)
-            Rootport.object.filter(link=rp.link).delete()
+            Rootport.objects.filter(link=rp.link).delete()
 
 
 def get_keyworld(keyworld_pages):

@@ -16,6 +16,8 @@ import sys
 
 
 
+PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
+
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 reload(sys)
 sys.setdefaultencoding('utf-8')

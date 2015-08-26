@@ -96,7 +96,9 @@ def get_sub_page_resources(link, num):
             try:
                 result = soup.find_all(href=re.compile("magnet"))
             except urllib2.URLError:
-                pass
+                print "error"*80
+                print content
+                print "error"*80
             else:
                 for link in result:
                     if not len(Resources.objects.filter(link=link.get('href'))) and link.get(

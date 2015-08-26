@@ -86,7 +86,7 @@ def get_sub_page_resources(link, num):
         resources_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
-        request = urllib2.Request(url="%s%s" % (link, i), headers=headers)
+        request = urllib2.Request(url="%s%d" % (link, i), headers=headers)
         response = urllib2.urlopen(request)
         content = response.read()
         if content:

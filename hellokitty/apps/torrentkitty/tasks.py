@@ -61,12 +61,13 @@ def get_resources_and_page():
 
 
 def get_keyworld(keyworld_pages):
+    print("获取关键词")
     for keyworld_page in keyworld_pages:
         rp_list = []
         ck_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
-        request = urllib2.Request(url="http://www.torrentkitty.org%s" % keyworld_page.get("href"), headers=headers)
+        request = urllib2.Request(url="http://www.torrentkitty.org{link}".format(link=keyworld_page.get("href")), headers=headers)
         response = urllib2.urlopen(request)
         content = response.read()
         if content:
@@ -81,6 +82,7 @@ def get_keyworld(keyworld_pages):
 
 
 def get_sub_page_resources(link, num):
+    print("获取子页面")
     for i in range(1, num):
         cr_list = []
         resources_list = []

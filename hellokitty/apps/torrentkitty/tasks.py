@@ -93,12 +93,16 @@ def get_sub_page_resources(link, num):
         content = response.read()
         if content:
             soup = BeautifulSoup(content)
-            result = soup.find_all(href=re.compile("magnet"))
-            for link in result:
-                if not len(Resources.objects.filter(link=link.get('href'))) and link.get(
-                        'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
-                    resources_list.append(Resources(title=link.get('title'), link=link.get('href')))
-                    cr_list.append(link.get('href'))
-            Resources.objects.bulk_create(resources_list)
-            keyworld_pages = soup.find_all(href=re.compile("information"))
-            get_keyworld(keyworld_pages)
+            try:
+                result = soup.find_all(href=re.compile("magnet"))
+            except urllib2.URLError:
+                pass
+            else:
+                for link in result:
+                    if not len(Resources.objects.filter(link=link.get('href'))) and link.get(
+                            'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
+                        resources_list.append(Resources(title=link.get('title'), link=link.get('href')))
+                        cr_list.append(link.get('href'))
+                Resources.objects.bulk_create(resources_list)
+                keyworld_pages = soup.find_all(href=re.compile("information"))
+                get_keyworld(keyworld_pages)

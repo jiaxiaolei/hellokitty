@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'hellokitty.apps.torrentkitty',
     'djcelery',
     'djsupervisor',
+    'south'
 )
 
 MIDDLEWARE_CLASSES = (

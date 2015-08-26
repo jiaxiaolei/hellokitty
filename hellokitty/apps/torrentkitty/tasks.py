@@ -46,7 +46,7 @@ def get_resources_and_page():
                 page_num_div_str = BeautifulSoup(str(page_num_div[0]))
                 page_nums = page_num_div_str.find_all("a")
                 count = int(page_nums[-2].get('href'))
-                rp.pagenum = count
+                rp.page_num = count
                 rp.save()
                 get_sub_page_resources(rp.link, count)
             result = soup.find_all(href=re.compile("magnet"))

@@ -125,10 +125,10 @@ BROKER_URL = 'redis://localhost:6379/0'
 CELERYBEAT_SCHEDULE = {
     "robot": {
         "task": "hellokitty.apps.torrentkitty.tasks.get_root_port",
-        "schedule": timedelta(hours=12),
+        "schedule": timedelta(hours=0.01),
     },
     "resources": {
         "task": "hellokitty.apps.torrentkitty.tasks.get_resources_and_page",
-        "schedule": timedelta(hours=12),
+        "schedule": timedelta(hours=0.01),
     }
 }

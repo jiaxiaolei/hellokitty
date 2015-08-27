@@ -52,7 +52,6 @@ def get_resources_and_page():
                     count = int(page_nums[-2].get('href'))
                     rp.page_num = count
                     rp.save()
-                    print rp.link
                     get_sub_page_resources(link=rp.link, num=count)
                 result = soup.find_all(href=re.compile("magnet"))
                 for link in result:
@@ -66,13 +65,11 @@ def get_resources_and_page():
 
 
 def get_keyworld(keyworld_pages):
-    print("获取关键词")
     for keyworld_page in keyworld_pages:
         rp_list = []
         ck_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
-        print "keyworld_page{keyworld}".format(keyworld=keyworld_page.get("href") )
         try:
             request = urllib2.Request(url="http://www.torrentkitty.org{link}".format(link=keyworld_page.get("href")), headers=headers)
             response = urllib2.urlopen(request)
@@ -92,15 +89,11 @@ def get_keyworld(keyworld_pages):
 
 
 def get_sub_page_resources(link=None, num=None):
-    print("获取子页面")
     for i in range(1, num+1):
         cr_list = []
         resources_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
-        print "{link}{i}".format(link=link, i=i)
-        print "link:{link}".format(link=link)
-        print "i:{i}".format(i=i)
         request = urllib2.Request(url="{link}{i}".format(link=link, i=i), headers=headers)
         response = urllib2.urlopen(request)
         content = response.read()

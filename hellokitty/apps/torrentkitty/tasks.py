@@ -36,28 +36,33 @@ def get_resources_and_page():
         resources_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
-        request = urllib2.Request(url=rp.link, headers=headers)
-        response = urllib2.urlopen(request)
-        content = response.read()
-        if content:
-            soup = BeautifulSoup(content)
-            page_num_div = soup.find_all("div", class_="pagination")
-            if page_num_div:
-                page_num_div_str = BeautifulSoup(str(page_num_div[0]))
-                page_nums = page_num_div_str.find_all("a")
-                count = int(page_nums[-2].get('href'))
-                rp.page_num = count
-                rp.save()
-                get_sub_page_resources(rp.link, count)
-            result = soup.find_all(href=re.compile("magnet"))
-            for link in result:
-                if not len(Resources.objects.filter(link=link.get('href'))) and link.get(
-                        'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
-                    resources_list.append(Resources(title=link.get('title'), link=link.get('href')))
-                    cr_list.append(link.get('href'))
-            Resources.objects.bulk_create(resources_list)
-            keyworld_pages = soup.find_all(href=re.compile("information"))
-            get_keyworld(keyworld_pages)
+        try:
+            request = urllib2.Request(url=rp.link, headers=headers)
+            response = urllib2.urlopen(request)
+            content = response.read()
+        except:
+            pass
+        else:
+            if content:
+                soup = BeautifulSoup(content)
+                page_num_div = soup.find_all("div", class_="pagination")
+                if page_num_div:
+                    page_num_div_str = BeautifulSoup(str(page_num_div[0]))
+                    page_nums = page_num_div_str.find_all("a")
+                    count = int(page_nums[-2].get('href'))
+                    rp.page_num = count
+                    rp.save()
+                    print rp.link
+                    get_sub_page_resources(link=rp.link, num=count)
+                result = soup.find_all(href=re.compile("magnet"))
+                for link in result:
+                    if not len(Resources.objects.filter(link=link.get('href'))) and link.get(
+                            'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
+                        resources_list.append(Resources(title=link.get('title'), link=link.get('href')))
+                        cr_list.append(link.get('href'))
+                Resources.objects.bulk_create(resources_list)
+                keyworld_pages = soup.find_all(href=re.compile("information"))
+                get_keyworld(keyworld_pages)
 
 
 def get_keyworld(keyworld_pages):
@@ -67,44 +72,46 @@ def get_keyworld(keyworld_pages):
         ck_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
-        request = urllib2.Request(url="http://www.torrentkitty.org{link}".format(link=keyworld_page.get("href")), headers=headers)
-        response = urllib2.urlopen(request)
-        content = response.read()
-        if content:
-            soup = BeautifulSoup(content)
-            result = soup.find_all(href=re.compile("/search/"))
-            for link in result:
-                rlink = "http://www.torrentkitty.org{link}".format(link=link.get('href'))
-                if not Rootport.objects.filter(link=rlink) and rlink not in ck_list and link.get('title'):
-                    rp_list.append(Rootport(title=link.get('title'), link=rlink))
-                    ck_list.append(rlink)
-            Rootport.objects.bulk_create(rp_list)
+        print "keyworld_page{keyworld}".format(keyworld=keyworld_page.get("href") )
+        try:
+            request = urllib2.Request(url="http://www.torrentkitty.org{link}".format(link=keyworld_page.get("href")), headers=headers)
+            response = urllib2.urlopen(request)
+            content = response.read()
+        except:
+            pass
+        else:
+            if content:
+                soup = BeautifulSoup(content)
+                result = soup.find_all(href=re.compile("/search/"))
+                for link in result:
+                    rlink = "http://www.torrentkitty.org{link}".format(link=link.get('href'))
+                    if not Rootport.objects.filter(link=rlink) and rlink not in ck_list and link.get('title'):
+                        rp_list.append(Rootport(title=link.get('title'), link=rlink))
+                        ck_list.append(rlink)
+                Rootport.objects.bulk_create(rp_list)
 
 
-def get_sub_page_resources(link, num):
+def get_sub_page_resources(link=None, num=None):
     print("获取子页面")
-    for i in range(1, num):
+    for i in range(1, num+1):
         cr_list = []
         resources_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
+        print "{link}{i}".format(link=link, i=i)
+        print "link:{link}".format(link=link)
+        print "i:{i}".format(i=i)
         request = urllib2.Request(url="{link}{i}".format(link=link, i=i), headers=headers)
         response = urllib2.urlopen(request)
         content = response.read()
         if content:
             soup = BeautifulSoup(content)
-            try:
-                result = soup.find_all(href=re.compile("magnet"))
-            except urllib2.URLError:
-                print "error"*80
-                print content
-                print "error"*80
-            else:
-                for link in result:
-                    if not len(Resources.objects.filter(link=link.get('href'))) and link.get(
-                            'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
-                        resources_list.append(Resources(title=link.get('title'), link=link.get('href')))
-                        cr_list.append(link.get('href'))
-                Resources.objects.bulk_create(resources_list)
-                keyworld_pages = soup.find_all(href=re.compile("information"))
-                get_keyworld(keyworld_pages)
+            result = soup.find_all(href=re.compile("magnet"))
+            for sublink in result:
+                if not len(Resources.objects.filter(link=sublink.get('href'))) and sublink.get(
+                        'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
+                    resources_list.append(Resources(title=sublink.get('title'), link=sublink.get('href')))
+                    cr_list.append(sublink.get('href'))
+            Resources.objects.bulk_create(resources_list)
+            keyworld_pages = soup.find_all(href=re.compile("information"))
+            get_keyworld(keyworld_pages)

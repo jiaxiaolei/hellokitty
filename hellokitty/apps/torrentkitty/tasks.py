@@ -101,6 +101,8 @@ def get_sub_page_resources(link=None, num=None):
             soup = BeautifulSoup(content)
             result = soup.find_all(href=re.compile("magnet"))
             for sublink in result:
+                print sublink.get('href')
+                print link.get('title')
                 if not len(Resources.objects.filter(link=sublink.get('href'))) and sublink.get(
                         'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
                     resources_list.append(Resources(title=sublink.get('title'), link=sublink.get('href')))

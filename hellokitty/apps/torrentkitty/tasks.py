@@ -95,17 +95,21 @@ def get_sub_page_resources(link=None, num=None):
         resources_list = []
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
-        request = urllib2.Request(url="{link}{i}".format(link=link, i=i), headers=headers)
-        response = urllib2.urlopen(request)
-        content = response.read()
-        if content:
-            soup = BeautifulSoup(urllib.quote(content))
-            result = soup.find_all(href=re.compile("magnet"))
-            for sublink in result:
-                if not len(Resources.objects.filter(link=sublink.get('href'))) and sublink.get(
-                        'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
-                    resources_list.append(Resources(title=sublink.get('title'), link=sublink.get('href')))
-                    cr_list.append(sublink.get('href'))
-            Resources.objects.bulk_create(resources_list)
-            keyworld_pages = soup.find_all(href=re.compile("information"))
-            get_keyworld(keyworld_pages)
+        try:
+            request = urllib2.Request(url="{link}{i}".format(link=link, i=i), headers=headers)
+            response = urllib2.urlopen(request)
+            content = response.read()
+        except:
+            pass
+        else:
+            if content:
+                soup = BeautifulSoup(urllib.quote(content))
+                result = soup.find_all(href=re.compile("magnet"))
+                for sublink in result:
+                    if not len(Resources.objects.filter(link=sublink.get('href'))) and sublink.get(
+                            'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
+                        resources_list.append(Resources(title=sublink.get('title'), link=sublink.get('href')))
+                        cr_list.append(sublink.get('href'))
+                Resources.objects.bulk_create(resources_list)
+                keyworld_pages = soup.find_all(href=re.compile("information"))
+                get_keyworld(keyworld_pages)

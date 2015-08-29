@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import urllib
 from celery.task import task
 import urllib2
 import re
@@ -98,11 +99,9 @@ def get_sub_page_resources(link=None, num=None):
         response = urllib2.urlopen(request)
         content = response.read()
         if content:
-            soup = BeautifulSoup(content)
+            soup = BeautifulSoup(urllib.quote(content))
             result = soup.find_all(href=re.compile("magnet"))
             for sublink in result:
-                print sublink.get('href')
-                print link.get('title')
                 if not len(Resources.objects.filter(link=sublink.get('href'))) and sublink.get(
                         'href') not in cr_list and not len(Resources.objects.filter(title=link.get('title'))):
                     resources_list.append(Resources(title=sublink.get('title'), link=sublink.get('href')))

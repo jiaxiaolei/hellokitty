@@ -3,8 +3,8 @@ from django.db import models
 
 # Create your models here.
 class Rootport(models.Model):
-    title = models.TextField()
-    link = models.TextField()
+    title = models.TextField(unique=True)
+    link = models.TextField(unique=True)
     status = models.BooleanField(default=False)
     page_num = models.IntegerField(null=True)
 
@@ -13,8 +13,8 @@ class Rootport(models.Model):
 
 
 class Resources(models.Model):
-    title = models.TextField()
-    link = models.TextField()
+    title = models.TextField(unique=True)
+    link = models.TextField(unique=True)
     status = models.BooleanField(default=False)
 
     def __unicode__(self):

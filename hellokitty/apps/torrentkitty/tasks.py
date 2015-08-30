@@ -21,8 +21,10 @@ def get_root_port():
         soup = BeautifulSoup(content)
         result = soup.find_all(href=re.compile("/search/"))
         for link in result:
-            if not Rootport.objects.filter(link="http://www.torrentkitty.org{link}".format(link=link.get('href'))) :
-                Rootport.objects.create(title=link.string, link="http://www.torrentkitty.org{link}".format(link=link.get('href')))
+            try:
+                Rootport.objects.create(title=link.string,link="http://www.torrentkitty.org{link}".format(link=link.get('href')))
+            except:
+                pass
 
 
 @task
@@ -49,8 +51,10 @@ def get_resources_and_page():
                     get_sub_page_resources(link=rp.link, num=count)
                 result = soup.find_all(href=re.compile("magnet"))
                 for link in result:
-                    if not len(Resources.objects.filter(link=link.get('href'))) and not len(Resources.objects.filter(title=link.get('title'))):
+                    try:
                         Resources.objects.create(title=link.get('title'), link=link.get('href'))
+                    except:
+                        pass
                 keyworld_pages = soup.find_all(href=re.compile("information"))
                 get_keyworld(keyworld_pages)
 
@@ -60,7 +64,8 @@ def get_keyworld(keyworld_pages):
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
         try:
-            request = urllib2.Request(url="http://www.torrentkitty.org{link}".format(link=keyworld_page.get("href")), headers=headers)
+            request = urllib2.Request(url="http://www.torrentkitty.org{link}".format(link=keyworld_page.get("href")),
+                                      headers=headers)
             response = urllib2.urlopen(request)
             content = response.read()
         except:
@@ -70,13 +75,15 @@ def get_keyworld(keyworld_pages):
                 soup = BeautifulSoup(content)
                 result = soup.find_all(href=re.compile("/search/"))
                 for link in result:
-                    rlink = "http://www.torrentkitty.org{link}".format(link=link.get('href'))
-                    if not Rootport.objects.filter(link=rlink):
-                        Rootport.objects.create(title=link.string, link="http://www.torrentkitty.org{link}".format(link=link.get('href')))
+                    try:
+                        Rootport.objects.create(title=link.string,
+                                                link="http://www.torrentkitty.org{link}".format(link=link.get('href')))
+                    except:
+                        pass
 
 
 def get_sub_page_resources(link=None, num=None):
-    for i in range(1, num+1):
+    for i in range(1, num + 1):
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
         try:
@@ -90,7 +97,9 @@ def get_sub_page_resources(link=None, num=None):
                 soup = BeautifulSoup(urllib.quote(content))
                 result = soup.find_all(href=re.compile("magnet"))
                 for sublink in result:
-                    if not len(Resources.objects.filter(link=sublink.get('href'))) and not len(Resources.objects.filter(title=link.get('title'))):
+                    try:
                         Resources.objects.create(title=sublink.get('title'), link=sublink.get('href'))
+                    except:
+                        pass
                 keyworld_pages = soup.find_all(href=re.compile("information"))
                 get_keyworld(keyworld_pages)

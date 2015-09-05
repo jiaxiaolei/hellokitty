@@ -57,6 +57,9 @@ docs/_build/
 
 # PyBuilder
 target/
-
+.idea/*
+migrations/*
 # Created by .ignore support plugin (hsz.mobi)
-local_settings.py
+hellokitty/local_settings.py
+.gitignore
+*.pyc

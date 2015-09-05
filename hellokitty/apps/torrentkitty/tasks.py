@@ -5,6 +5,7 @@ import urllib2
 import re
 from bs4 import BeautifulSoup
 from hellokitty.apps.torrentkitty.models import Rootport, Resources
+from hellokitty.common.appconfig import BF_ROOT, BF_RESOURCES
 
 __author__ = 'wangyiyang'
 
@@ -19,17 +20,19 @@ def get_root_port():
     content = response.read()
     if content:
         soup = BeautifulSoup(content)
-        result = soup.find_all(href=re.compile("/search/"))
-        for link in result:
-            try:
-                Rootport.objects.create(title=link.string,link="http://www.torrentkitty.org{link}".format(link=link.get('href')))
-            except:
-                pass
+        results = soup.find_all(href=re.compile("/search/"))
+        for result in results:
+            link = result.get('href')
+            title = result.string
+            bfs = BF_ROOT.add(link)
+            if bfs == False:
+                Rootport.objects.create(
+                    title=title, link="http://www.torrentkitty.org{link}".format(link=link))
 
 
 @task
 def get_resources_and_page():
-    for rp in Rootport.objects.all():
+    for rp in Rootport.objects.select_related("link"):
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
         try:
@@ -49,12 +52,13 @@ def get_resources_and_page():
                     rp.page_num = count
                     rp.save()
                     get_sub_page_resources(link=rp.link, num=count)
-                result = soup.find_all(href=re.compile("magnet"))
-                for link in result:
-                    try:
-                        Resources.objects.create(title=link.get('title'), link=link.get('href'))
-                    except:
-                        pass
+                results = soup.find_all(href=re.compile("magnet"))
+                for result in results:
+                    link = result.get('href')
+                    title = result.get('title')
+                    bfr = BF_RESOURCES.add(link)
+                    if bfr == False:
+                        Resources.objects.create(title=title, link=link)
                 keyworld_pages = soup.find_all(href=re.compile("information"))
                 get_keyworld(keyworld_pages)
 
@@ -73,13 +77,15 @@ def get_keyworld(keyworld_pages):
         else:
             if content:
                 soup = BeautifulSoup(content)
-                result = soup.find_all(href=re.compile("/search/"))
-                for link in result:
-                    try:
-                        Rootport.objects.create(title=link.string,
-                                                link="http://www.torrentkitty.org{link}".format(link=link.get('href')))
-                    except:
-                        pass
+                results = soup.find_all(href=re.compile("/search/"))
+                for result in results:
+                    print result
+                    link = result.get('href')
+                    title = result.get('title')
+                    bfs = BF_ROOT.add(link)
+                    if bfs == False and title != None:
+                        Rootport.objects.create(
+                            title=title, link="http://www.torrentkitty.org{link}".format(link=link))
 
 
 def get_sub_page_resources(link=None, num=None):
@@ -87,7 +93,8 @@ def get_sub_page_resources(link=None, num=None):
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
         try:
-            request = urllib2.Request(url="{link}{i}".format(link=link, i=i), headers=headers)
+            request = urllib2.Request(
+                url="{link}{i}".format(link=link, i=i), headers=headers)
             response = urllib2.urlopen(request)
             content = response.read()
         except:
@@ -95,11 +102,12 @@ def get_sub_page_resources(link=None, num=None):
         else:
             if content:
                 soup = BeautifulSoup(urllib.quote(content))
-                result = soup.find_all(href=re.compile("magnet"))
-                for sublink in result:
-                    try:
-                        Resources.objects.create(title=sublink.get('title'), link=sublink.get('href'))
-                    except:
-                        pass
+                results = soup.find_all(href=re.compile("magnet"))
+                for result in results:
+                    sublink = result.get('href')
+                    title = result.get('title')
+                    bfr = BF_RESOURCES.add(sublink)
+                    if bfr == False:
+                        Resources.objects.create(title=title, link=sublink)
                 keyworld_pages = soup.find_all(href=re.compile("information"))
                 get_keyworld(keyworld_pages)

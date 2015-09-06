@@ -12,6 +12,7 @@ def home(request):
 
 def export(request):
     resources = Resources.objects.filter(status=False)
+    resources.update(status=True)
     return render_to_response('results.html',
                               {'resources': resources},
                               context_instance=RequestContext(request))

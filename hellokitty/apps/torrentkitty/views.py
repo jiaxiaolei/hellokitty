@@ -14,7 +14,7 @@ def home(request):
 def export(request):
     resources = Resources.objects.filter(status=False)
     results = copy.deepcopy(resources)
-    # resources.update(status=True)
+    resources.update(status=True)
     return render_to_response('results.html',
                               {'resources': results},
                               context_instance=RequestContext(request))

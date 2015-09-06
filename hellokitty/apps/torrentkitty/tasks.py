@@ -61,6 +61,8 @@ def get_resources_and_page():
                         Resources.objects.create(title=title, link=link)
                 keyworld_pages = soup.find_all(href=re.compile("information"))
                 get_keyworld(keyworld_pages)
+        rp.status = True
+        rp.save()
 
 
 def get_keyworld(keyworld_pages):

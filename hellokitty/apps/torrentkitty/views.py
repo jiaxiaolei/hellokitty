@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from hellokitty.apps.torrentkitty.models import Resources
+import copy
 
 # Create your views here.
 
@@ -12,7 +13,8 @@ def home(request):
 
 def export(request):
     resources = Resources.objects.filter(status=False)
-    resources.update(status=True)
+    results = copy.deepcopy(resources)
+    # resources.update(status=True)
     return render_to_response('results.html',
-                              {'resources': resources},
+                              {'resources': results},
                               context_instance=RequestContext(request))

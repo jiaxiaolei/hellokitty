@@ -32,7 +32,7 @@ def get_root_port():
 
 @task
 def get_resources_and_page():
-    for rp in Rootport.objects.select_related("link"):
+    for rp in Rootport.objects.filter(status=0).select_related("link"):
         headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
                    'Referer': 'http://www.zhihu.com/articles'}
         try:

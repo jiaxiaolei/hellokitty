@@ -25,7 +25,7 @@ def get_root_port():
             link = result.get('href')
             title = result.string
             bfs = BF_ROOT.add(link)
-            if bfs == False:
+            if bfs is False:
                 Rootport.objects.create(
                     title=title, link="http://www.torrentkitty.org{link}".format(link=link))
 
@@ -57,7 +57,7 @@ def get_resources_and_page():
                     link = result.get('href')
                     title = result.get('title')
                     bfr = BF_RESOURCES.add(link)
-                    if bfr == False:
+                    if bfr is False:
                         Resources.objects.create(title=title, link=link)
                 keyworld_pages = soup.find_all(href=re.compile("information"))
                 get_keyworld(keyworld_pages)
@@ -83,7 +83,7 @@ def get_keyworld(keyworld_pages):
                     link = result.get('href')
                     title = result.get('title')
                     bfs = BF_ROOT.add(link)
-                    if bfs == False and title != None:
+                    if bfs is False and title is not None:
                         Rootport.objects.create(
                             title=title, link="http://www.torrentkitty.org{link}".format(link=link))
 
@@ -107,7 +107,7 @@ def get_sub_page_resources(link=None, num=None):
                     sublink = result.get('href')
                     title = result.get('title')
                     bfr = BF_RESOURCES.add(sublink)
-                    if bfr == False:
+                    if bfr is False:
                         Resources.objects.create(title=title, link=sublink)
                 keyworld_pages = soup.find_all(href=re.compile("information"))
                 get_keyworld(keyworld_pages)

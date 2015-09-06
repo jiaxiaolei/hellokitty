@@ -1,0 +1,15 @@
+{# result.html #}
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+{% for resource in resources  %}
+	<p>{{ resource.link }}</p>
+	{% if forloop.counter|divisibleby:"10" %} 
+		<p>======================================</p>
+	{% endif %}
+{% endfor %}
+</body>
+</html>

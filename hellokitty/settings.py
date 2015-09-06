@@ -14,7 +14,7 @@ from local_settings import *
 from hellokitty.common.appconfig import *
 from datetime import timedelta
 import sys
-
+import djcelery
 
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
@@ -24,9 +24,9 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DEFAULT_CHARSET = 'utf-8'
-import djcelery
-djcelery.setup_loader()
 
+djcelery.setup_loader()
+BASE_DIR = BASE_DIR + '/hellokitty'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -71,38 +71,54 @@ ROOT_URLCONF = 'hellokitty.urls'
 WSGI_APPLICATION = 'hellokitty.wsgi.application'
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/').replace('\\','/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/').replace('\\', '/')
 MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\','/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
 
 STATIC_URL = '/static/'
 # Additional locations of static files
 base_locale_path = os.path.dirname(os.path.dirname(__file__))
 LOCALE_PATHS = (
-   os.path.join(base_locale_path, 'locale').replace('\\','/'),
+    os.path.join(base_locale_path, 'locale').replace('\\', '/'),
 )
 
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    ("css", os.path.join(STATIC_ROOT,'css')),
-    ("js", os.path.join(STATIC_ROOT,'js')),
-    ("images", os.path.join(STATIC_ROOT,'images')),
-    ("upload", os.path.join(STATIC_ROOT,'upload')),
-    ("fonts", os.path.join(STATIC_ROOT,'fonts')),
-    ("webuploader", os.path.join(STATIC_ROOT,'webuploader')),
+    ("css", os.path.join(STATIC_ROOT, 'css')),
+    ("js", os.path.join(STATIC_ROOT, 'js')),
+    ("images", os.path.join(STATIC_ROOT, 'images')),
+    ("upload", os.path.join(STATIC_ROOT, 'upload')),
+    ("fonts", os.path.join(STATIC_ROOT, 'fonts')),
+    ("webuploader", os.path.join(STATIC_ROOT, 'webuploader')),
+)
+
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or
+    # "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    # '/home/looen/workspace/coin2b/templates/',
+    os.path.join(BASE_DIR, 'templates/').replace('\\', '/'),
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.core.context_processors.i18n',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+)
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    #     'django.template.loaders.eggs.Loader',
 )
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

@@ -13,6 +13,8 @@ def home(request):
 
 def export(request):
     resources = Resources.objects.filter(status=False)
+    results = copy.copy(resources)
+    resources.update(status=True)
     return render_to_response('results.html',
-                              {'resources': resources},
+                              {'resources': results},
                               context_instance=RequestContext(request))
